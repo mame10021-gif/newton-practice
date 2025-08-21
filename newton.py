@@ -22,22 +22,26 @@ def _first_derivative(f, x, h):
     """
     return (f(x + h) - f(x - h)) / (2.0 * h)
 
+
 def _second_derivative(f, x, h):
     """
     Estimate the second derivative f''(x)
     """
     return (f(x + h) - 2.0 * f(x) + f(x - h)) / (h**2)
 
-def optimize(x0, f, tol=1e-4, max_iter=100, h=1e-3, return_history=False, comments=False):
+
+def optimize(
+    x0, f, tol=1e-4, max_iter=100, h=1e-3, return_history=False, comments=False
+):
     """
     Minimize a univariate function f(x) using Newton's method with the following parameters:
-    
+
     =Parameters=
     x0 : Starting point for the iterations.
     f : The function to minimize. .
     tol : Tolerance for stopping. We stop when the change |x_{k+1} - x_k| is below tol.
     max_iter : Maximum number of iterations to attempt.
-    h : Step size for finite-difference derivatives. 
+    h : Step size for finite-difference derivatives.
     return_history : If True, also return a list of iterates [x0, x1, ..., x*] so you can inspect the path.
     verbose : bool, optional
         If True, print progress each iteration (x, f(x), f'(x), f''(x)).
@@ -47,7 +51,7 @@ def optimize(x0, f, tol=1e-4, max_iter=100, h=1e-3, return_history=False, commen
     hist : Only returned if return_history=True. The sequence of x values visited.
     """
 
-    x = float(x0)     
+    x = float(x0)
     history = [x]
 
     for it in range(1, max_iter + 1):
@@ -56,7 +60,9 @@ def optimize(x0, f, tol=1e-4, max_iter=100, h=1e-3, return_history=False, commen
         fsecond = _second_derivative(f, x, h)
 
         if comments:
-            print(f"[iter {it:02d}] x={x:.8f}  f(x)={f(x):.8f}  f'(x)={fprime:.8e}  f''(x)={fsecond:.8e}")
+            print(
+                f"[iter {it:02d}] x={x:.8f}  f(x)={f(x):.8f}  f'(x)={fprime:.8e}  f''(x)={fsecond:.8e}"
+            )
 
         if abs(fsecond) < 1e-10:
             if comments:
@@ -68,13 +74,14 @@ def optimize(x0, f, tol=1e-4, max_iter=100, h=1e-3, return_history=False, commen
         if abs(x_new - x) < tol:
             x = x_new
             history.append(x)
-            if commnets:
+            if comments:
                 print(f"Converged: |Δx| < tol ({tol})")
             break
-            
+
         x = x_new
         history.append(x)
-        
+
     return (x, history) if return_history else x
+
 
 # %%
